@@ -11,6 +11,7 @@ using System.IO;
 using System.IO.Ports;
 using PowerSupply;
 using PowerSupply.xantrax_response;
+using Ivi.Visa.Interop;
 
 namespace RemotePS
 {
@@ -18,6 +19,7 @@ namespace RemotePS
     {
         #region members
         private xantrax powerSupply;
+        private keithley powerSupplyKeithley;
         private float voltage;
         private float current;
         private string file_log;
@@ -29,11 +31,14 @@ namespace RemotePS
             InitializeComponent();
 
             this.GetSerialPorts();
+            this.GetIVIDevices();
             this.SetConnectProperty(false);
             this.powerSupply = new xantrax(this);
             this.powerSupply.ResponseID += this.ID_RespHander;
             this.powerSupply.ResponseVoltage += this.Voltage_RespHandler;
             this.powerSupply.ResponseCurrent += this.Current_RespHandler;
+
+            this.powerSupplyKeithley = new keithley(this);
         }
 
         #region Helpers
@@ -61,6 +66,31 @@ namespace RemotePS
             }
         }
 
+        private void GetIVIDevices()
+        {
+            string[] ArrayIVIDevices = null;
+            int index = -1;
+            string IVI_deviceName = null;
+            ResourceManager resourceManager = new ResourceManager();
+            ArrayIVIDevices = resourceManager.FindRsrc("(USB)?*");
+
+            cbo_IVI_devices.Items.Clear();
+            cbo_IVI_devices.Text = null;
+            if(ArrayIVIDevices.GetUpperBound(0) >= 0) {
+                do {
+                    index += 1;
+                    cbo_IVI_devices.Items.Add(ArrayIVIDevices[index]);
+                }
+                while (!( ( ArrayIVIDevices[index] == IVI_deviceName ) ||
+                     ( index == ArrayIVIDevices.GetUpperBound(0) ) ));
+
+                if (index == ArrayIVIDevices.GetUpperBound(0)) {
+                    IVI_deviceName = ArrayIVIDevices[0];
+                }
+                cbo_IVI_devices.Text = ArrayIVIDevices[0];
+            }
+        }
+
         private void SetConnectProperty(bool isConnected)
         {
             this.cboPorts.Enabled = !isConnected;
@@ -72,13 +102,21 @@ namespace RemotePS
             this.label_logFilename.Text = "Log File: " + Path.GetFileName(this.file_log);
         }
 
+        private void SetKeithleyConnectProperty(bool isConnected)
+        {
+            this.timer_keithley_poll.Enabled = isConnected;
+            this.groupBox_keithley.Enabled = isConnected;
+            this.cbo_IVI_devices.Enabled = !isConnected;
+            this.btnGetIVIdevices.Enabled = !isConnected;
+        }
+
         #endregion
 
         #region Event Handlers
         #region Xantrax Event Handlers
         private void ID_RespHander(object sender, ID_RespArgs e)
         {
-            this.Text = e.id;
+            this.Text = e.id + " v0.02";
         }
 
         private void Voltage_RespHandler(object sender, Voltage_RespArgs e)
@@ -97,6 +135,11 @@ namespace RemotePS
         private void btnGetSerialPorts_Click(object sender, EventArgs e)
         {
             this.GetSerialPorts();
+        }
+
+        private void btnGetIVIdevices_Click(object sender, EventArgs e)
+        {
+            this.GetIVIDevices();
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
@@ -123,6 +166,35 @@ namespace RemotePS
                 }
             }
         }
+
+        private void btnKeithleyConnect_Click(object sender, EventArgs e)
+        {
+            if (btnKeithleyConnect.Text == "Connect") {
+                try {
+                    this.powerSupplyKeithley.Connect(cbo_IVI_devices.Text);
+                    this.lbl_KeithleyDevice.Text = "IDN: " + this.powerSupplyKeithley.GetID();
+                    this.btn_set_ch1_Click(sender, e);
+                    this.btn_set_ch2_Click(sender, e);
+                    this.btn_set_ch3_Click(sender, e);
+                    this.powerSupplyKeithley.OutputEnable(false);
+                    btnKeithleyConnect.Text = "Disconnect";
+                    this.SetKeithleyConnectProperty(true);
+                } catch (Exception ex) {
+                    MessageBox.Show(ex.Message);
+                }
+            } else {
+                try {
+                    this.powerSupplyKeithley.Disconnect();
+                    btnKeithleyConnect.Text = "Connect";
+                    this.powerSupplyKeithley.OutputEnable(false); 
+                    this.SetKeithleyConnectProperty(false);
+                    this.lbl_KeithleyDevice.Text = "IDN: ----";
+                } catch (Exception ex) {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
         #endregion
 
         #endregion
@@ -134,19 +206,32 @@ namespace RemotePS
             this.powerSupply.GetCurrent();
         }
 
+        private void timer_keithley_poll_Tick(object sender, EventArgs e)
+        {
+            float tmpValf32;
+
+            tmpValf32 = this.powerSupplyKeithley.GetVoltage(0);
+            lbl_voltage_ch1.Text = "voltage: " + tmpValf32.ToString("0.00") + " V";
+            tmpValf32 = this.powerSupplyKeithley.GetCurrent(0);
+            lbl_current_ch1.Text = "current: " + tmpValf32.ToString("0.00") + " A";
+
+            tmpValf32 = this.powerSupplyKeithley.GetVoltage(1);
+            lbl_voltage_ch2.Text = "voltage: " + tmpValf32.ToString("0.00") + " V";
+            tmpValf32 = this.powerSupplyKeithley.GetCurrent(1);
+            lbl_current_ch2.Text = "current: " + tmpValf32.ToString("0.00") + " A";
+
+            tmpValf32 = this.powerSupplyKeithley.GetVoltage(2);
+            lbl_voltage_ch3.Text = "voltage: " + tmpValf32.ToString("0.00") + " V";
+            tmpValf32 = this.powerSupplyKeithley.GetCurrent(2);
+            lbl_current_ch3.Text = "current: " + tmpValf32.ToString("0.00") + " A";
+        }
+
+
         private void button_setVoltage_Click(object sender, EventArgs e)
         {
             try {
                 float voltage = Convert.ToSingle(textBox_voltage.Text);
                 this.powerSupply.SetVoltage(voltage);
-            } catch (Exception ex) {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void button_setCurrent_Click(object sender, EventArgs e)
-        {
-            try {
                 float current = Convert.ToSingle(textBox_current.Text);
                 this.powerSupply.SetCurrent(current);
             } catch (Exception ex) {
@@ -159,6 +244,11 @@ namespace RemotePS
             if(button_on_off.Text == "ON") {
                 this.powerSupply.SetOutput(true);
                 button_on_off.Text = "OFF";
+                int interval = Convert.ToInt32(textBox_logInterval.Text) * 1000;
+                if (interval < 300) {
+                    interval = 300;
+                }
+                this.timer_log.Interval = interval;
             } else {
                 this.powerSupply.SetOutput(false);
                 button_on_off.Text = "ON";
@@ -215,7 +305,68 @@ namespace RemotePS
                 logString += Environment.NewLine;
                 this.binary_writer_log.Write(Encoding.Default.GetBytes(logString));
             }
+        }
 
+        private void btn_Keithley_output_Click(object sender, EventArgs e)
+        {
+            if(btn_Keithley_output.Text == "ON") {
+                this.powerSupplyKeithley.OutputEnable(true);
+                btn_Keithley_output.Text = "OFF";
+            } else {
+                this.powerSupplyKeithley.OutputEnable(false);
+                btn_Keithley_output.Text = "ON";
+            }
+        }
+
+        private void ConfigChannel(byte channel, float voltage, float current)
+        {
+            if(channel < 3) {
+                this.powerSupplyKeithley.SetVoltage(channel, voltage);
+                this.powerSupplyKeithley.SetCurrent(channel, current);
+            }
+        }
+        private void btn_set_ch1_Click(object sender, EventArgs e)
+        {
+            float voltage;
+            float current;
+            try {
+                voltage = Convert.ToSingle(textBox_voltage_ch1.Text);
+                current = Convert.ToSingle(textBox_current_ch1.Text);
+                this.ConfigChannel(0, voltage, current);
+            } catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void btn_set_ch2_Click(object sender, EventArgs e)
+        {
+            float voltage;
+            float current;
+            try {
+                voltage = Convert.ToSingle(textBox_voltage_ch2.Text);
+                current = Convert.ToSingle(textBox_current_ch2.Text);
+                this.ConfigChannel(1, voltage, current);
+            } catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void btn_set_ch3_Click(object sender, EventArgs e)
+        {
+            float voltage;
+            float current;
+            try {
+                voltage = Convert.ToSingle(textBox_voltage_ch3.Text);
+                current = Convert.ToSingle(textBox_current_ch3.Text);
+                this.ConfigChannel(2, voltage, current);
+            } catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void btnKeithleyReset_Click(object sender, EventArgs e)
+        {
+            this.powerSupplyKeithley.Reset();
         }
     }
 }

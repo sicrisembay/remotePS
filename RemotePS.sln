@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemotePS", "RemotePS\Remote
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xantrax", "xantrax\xantrax.csproj", "{61DAA7C0-6D25-49D0-9AC2-9564676AE09D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "keithley", "keithley\keithley.csproj", "{E40330FA-269F-42D4-BAAA-23FBE12921B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{61DAA7C0-6D25-49D0-9AC2-9564676AE09D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61DAA7C0-6D25-49D0-9AC2-9564676AE09D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61DAA7C0-6D25-49D0-9AC2-9564676AE09D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E40330FA-269F-42D4-BAAA-23FBE12921B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E40330FA-269F-42D4-BAAA-23FBE12921B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E40330FA-269F-42D4-BAAA-23FBE12921B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E40330FA-269F-42D4-BAAA-23FBE12921B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
