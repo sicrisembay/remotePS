@@ -68,26 +68,30 @@ namespace RemotePS
 
         private void GetIVIDevices()
         {
-            string[] ArrayIVIDevices = null;
-            int index = -1;
-            string IVI_deviceName = null;
-            ResourceManager resourceManager = new ResourceManager();
-            ArrayIVIDevices = resourceManager.FindRsrc("(USB)?*");
+            try {
+                string[] ArrayIVIDevices = null;
+                int index = -1;
+                string IVI_deviceName = null;
+                ResourceManager resourceManager = new ResourceManager();
+                ArrayIVIDevices = resourceManager.FindRsrc("(USB)?*");
 
-            cbo_IVI_devices.Items.Clear();
-            cbo_IVI_devices.Text = null;
-            if(ArrayIVIDevices.GetUpperBound(0) >= 0) {
-                do {
-                    index += 1;
-                    cbo_IVI_devices.Items.Add(ArrayIVIDevices[index]);
-                }
-                while (!( ( ArrayIVIDevices[index] == IVI_deviceName ) ||
-                     ( index == ArrayIVIDevices.GetUpperBound(0) ) ));
+                cbo_IVI_devices.Items.Clear();
+                cbo_IVI_devices.Text = null;
+                if (ArrayIVIDevices.GetUpperBound(0) >= 0) {
+                    do {
+                        index += 1;
+                        cbo_IVI_devices.Items.Add(ArrayIVIDevices[index]);
+                    }
+                    while (!( ( ArrayIVIDevices[index] == IVI_deviceName ) ||
+                         ( index == ArrayIVIDevices.GetUpperBound(0) ) ));
 
-                if (index == ArrayIVIDevices.GetUpperBound(0)) {
-                    IVI_deviceName = ArrayIVIDevices[0];
+                    if (index == ArrayIVIDevices.GetUpperBound(0)) {
+                        IVI_deviceName = ArrayIVIDevices[0];
+                    }
+                    cbo_IVI_devices.Text = ArrayIVIDevices[0];
                 }
-                cbo_IVI_devices.Text = ArrayIVIDevices[0];
+            } catch (Exception ex) {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -104,7 +108,6 @@ namespace RemotePS
 
         private void SetKeithleyConnectProperty(bool isConnected)
         {
-            this.timer_keithley_poll.Enabled = isConnected;
             this.groupBox_keithley.Enabled = isConnected;
             this.cbo_IVI_devices.Enabled = !isConnected;
             this.btnGetIVIdevices.Enabled = !isConnected;
@@ -208,22 +211,15 @@ namespace RemotePS
 
         private void timer_keithley_poll_Tick(object sender, EventArgs e)
         {
-            float tmpValf32;
 
-            tmpValf32 = this.powerSupplyKeithley.GetVoltage(0);
-            lbl_voltage_ch1.Text = "voltage: " + tmpValf32.ToString("0.00") + " V";
-            tmpValf32 = this.powerSupplyKeithley.GetCurrent(0);
-            lbl_current_ch1.Text = "current: " + tmpValf32.ToString("0.00") + " A";
+            lbl_voltage_ch1.Text = "voltage: " + this.powerSupplyKeithley.channelData[0].voltage.ToString("0.00") + " V";
+            lbl_current_ch1.Text = "current: " + this.powerSupplyKeithley.channelData[0].current.ToString("0.00") + " A";
 
-            tmpValf32 = this.powerSupplyKeithley.GetVoltage(1);
-            lbl_voltage_ch2.Text = "voltage: " + tmpValf32.ToString("0.00") + " V";
-            tmpValf32 = this.powerSupplyKeithley.GetCurrent(1);
-            lbl_current_ch2.Text = "current: " + tmpValf32.ToString("0.00") + " A";
+            lbl_voltage_ch2.Text = "voltage: " + this.powerSupplyKeithley.channelData[1].voltage.ToString("0.00") + " V";
+            lbl_current_ch2.Text = "current: " + this.powerSupplyKeithley.channelData[1].current.ToString("0.00") + " A";
 
-            tmpValf32 = this.powerSupplyKeithley.GetVoltage(2);
-            lbl_voltage_ch3.Text = "voltage: " + tmpValf32.ToString("0.00") + " V";
-            tmpValf32 = this.powerSupplyKeithley.GetCurrent(2);
-            lbl_current_ch3.Text = "current: " + tmpValf32.ToString("0.00") + " A";
+            lbl_voltage_ch3.Text = "voltage: " + this.powerSupplyKeithley.channelData[2].voltage.ToString("0.00") + " V";
+            lbl_current_ch3.Text = "current: " + this.powerSupplyKeithley.channelData[2].current.ToString("0.00") + " A";
         }
 
 

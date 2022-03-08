@@ -30,6 +30,7 @@ namespace RemotePS
         {
             this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.btnGetSerialPorts = new System.Windows.Forms.Button();
             this.btnConnect = new System.Windows.Forms.Button();
             this.cboPorts = new System.Windows.Forms.ComboBox();
@@ -58,11 +59,11 @@ namespace RemotePS
             this.lbl_current_ch1 = new System.Windows.Forms.Label();
             this.timer_keithley_poll = new System.Windows.Forms.Timer(this.components);
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.textBox_voltage_ch1 = new System.Windows.Forms.TextBox();
-            this.textBox_current_ch1 = new System.Windows.Forms.TextBox();
             this.btn_set_ch1 = new System.Windows.Forms.Button();
+            this.textBox_current_ch1 = new System.Windows.Forms.TextBox();
+            this.textBox_voltage_ch1 = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.btn_set_ch2 = new System.Windows.Forms.Button();
             this.lbl_current_ch2 = new System.Windows.Forms.Label();
@@ -81,9 +82,8 @@ namespace RemotePS
             this.label15 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.groupBox_keithley = new System.Windows.Forms.GroupBox();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.btnKeithleyReset = new System.Windows.Forms.Button();
-            this.label8 = new System.Windows.Forms.Label();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
             this.groupBox_main.SuspendLayout();
@@ -108,6 +108,15 @@ namespace RemotePS
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Communication";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(17, 22);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(34, 13);
+            this.label8.TabIndex = 7;
+            this.label8.Text = "COM:";
             // 
             // btnGetSerialPorts
             // 
@@ -346,6 +355,7 @@ namespace RemotePS
             // 
             // timer_keithley_poll
             // 
+            this.timer_keithley_poll.Enabled = true;
             this.timer_keithley_poll.Interval = 1000;
             this.timer_keithley_poll.Tick += new System.EventHandler(this.timer_keithley_poll_Tick);
             // 
@@ -365,14 +375,31 @@ namespace RemotePS
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Channel1";
             // 
-            // label6
+            // btn_set_ch1
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(22, 24);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(45, 13);
-            this.label6.TabIndex = 0;
-            this.label6.Text = "voltage:";
+            this.btn_set_ch1.Location = new System.Drawing.Point(25, 135);
+            this.btn_set_ch1.Name = "btn_set_ch1";
+            this.btn_set_ch1.Size = new System.Drawing.Size(96, 27);
+            this.btn_set_ch1.TabIndex = 3;
+            this.btn_set_ch1.Text = "Set";
+            this.btn_set_ch1.UseVisualStyleBackColor = true;
+            this.btn_set_ch1.Click += new System.EventHandler(this.btn_set_ch1_Click);
+            // 
+            // textBox_current_ch1
+            // 
+            this.textBox_current_ch1.Location = new System.Drawing.Point(73, 48);
+            this.textBox_current_ch1.Name = "textBox_current_ch1";
+            this.textBox_current_ch1.Size = new System.Drawing.Size(48, 20);
+            this.textBox_current_ch1.TabIndex = 2;
+            this.textBox_current_ch1.Text = "1.0";
+            // 
+            // textBox_voltage_ch1
+            // 
+            this.textBox_voltage_ch1.Location = new System.Drawing.Point(73, 21);
+            this.textBox_voltage_ch1.Name = "textBox_voltage_ch1";
+            this.textBox_voltage_ch1.Size = new System.Drawing.Size(48, 20);
+            this.textBox_voltage_ch1.TabIndex = 1;
+            this.textBox_voltage_ch1.Text = "16.0";
             // 
             // label7
             // 
@@ -383,31 +410,14 @@ namespace RemotePS
             this.label7.TabIndex = 0;
             this.label7.Text = "current:";
             // 
-            // textBox_voltage_ch1
+            // label6
             // 
-            this.textBox_voltage_ch1.Location = new System.Drawing.Point(73, 21);
-            this.textBox_voltage_ch1.Name = "textBox_voltage_ch1";
-            this.textBox_voltage_ch1.Size = new System.Drawing.Size(48, 20);
-            this.textBox_voltage_ch1.TabIndex = 1;
-            this.textBox_voltage_ch1.Text = "16.0";
-            // 
-            // textBox_current_ch1
-            // 
-            this.textBox_current_ch1.Location = new System.Drawing.Point(73, 48);
-            this.textBox_current_ch1.Name = "textBox_current_ch1";
-            this.textBox_current_ch1.Size = new System.Drawing.Size(48, 20);
-            this.textBox_current_ch1.TabIndex = 2;
-            this.textBox_current_ch1.Text = "1.0";
-            // 
-            // btn_set_ch1
-            // 
-            this.btn_set_ch1.Location = new System.Drawing.Point(25, 135);
-            this.btn_set_ch1.Name = "btn_set_ch1";
-            this.btn_set_ch1.Size = new System.Drawing.Size(96, 27);
-            this.btn_set_ch1.TabIndex = 3;
-            this.btn_set_ch1.Text = "Set";
-            this.btn_set_ch1.UseVisualStyleBackColor = true;
-            this.btn_set_ch1.Click += new System.EventHandler(this.btn_set_ch1_Click);
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(22, 24);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(45, 13);
+            this.label6.TabIndex = 0;
+            this.label6.Text = "voltage:";
             // 
             // groupBox3
             // 
@@ -593,17 +603,6 @@ namespace RemotePS
             this.groupBox_keithley.TabIndex = 22;
             this.groupBox_keithley.TabStop = false;
             // 
-            // groupBox6
-            // 
-            this.groupBox6.Controls.Add(this.groupBox_keithley);
-            this.groupBox6.Controls.Add(this.groupBox5);
-            this.groupBox6.Location = new System.Drawing.Point(12, 25);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(551, 374);
-            this.groupBox6.TabIndex = 23;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "KEITHLEY";
-            // 
             // btnKeithleyReset
             // 
             this.btnKeithleyReset.Location = new System.Drawing.Point(20, 205);
@@ -614,14 +613,16 @@ namespace RemotePS
             this.btnKeithleyReset.UseVisualStyleBackColor = true;
             this.btnKeithleyReset.Click += new System.EventHandler(this.btnKeithleyReset_Click);
             // 
-            // label8
+            // groupBox6
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(17, 22);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(34, 13);
-            this.label8.TabIndex = 7;
-            this.label8.Text = "COM:";
+            this.groupBox6.Controls.Add(this.groupBox_keithley);
+            this.groupBox6.Controls.Add(this.groupBox5);
+            this.groupBox6.Location = new System.Drawing.Point(12, 25);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(551, 374);
+            this.groupBox6.TabIndex = 23;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "KEITHLEY";
             // 
             // groupBox7
             // 

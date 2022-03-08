@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xantrax", "xantrax\xantrax.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "keithley", "keithley\keithley.csproj", "{E40330FA-269F-42D4-BAAA-23FBE12921B0}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Installer", "Installer\Installer.vdproj", "{24E0F68B-4665-49C5-8FE6-04C5E5E282BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,8 @@ Global
 		{E40330FA-269F-42D4-BAAA-23FBE12921B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E40330FA-269F-42D4-BAAA-23FBE12921B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E40330FA-269F-42D4-BAAA-23FBE12921B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24E0F68B-4665-49C5-8FE6-04C5E5E282BC}.Debug|Any CPU.ActiveCfg = Debug
+		{24E0F68B-4665-49C5-8FE6-04C5E5E282BC}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
