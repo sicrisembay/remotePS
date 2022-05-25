@@ -85,6 +85,11 @@ namespace RemotePS
             this.btnKeithleyReset = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.groupBox_SeqPower = new System.Windows.Forms.GroupBox();
+            this.btn_SeqPower = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox_main.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -94,6 +99,7 @@ namespace RemotePS
             this.groupBox_keithley.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.groupBox7.SuspendLayout();
+            this.groupBox_SeqPower.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -241,7 +247,7 @@ namespace RemotePS
             // 
             // timer_log
             // 
-            this.timer_log.Interval = 1000;
+            this.timer_log.Interval = 500;
             this.timer_log.Tick += new System.EventHandler(this.timer_log_Tick);
             // 
             // label_logFilename
@@ -255,11 +261,12 @@ namespace RemotePS
             // 
             // textBox_logInterval
             // 
+            this.textBox_logInterval.Enabled = false;
             this.textBox_logInterval.Location = new System.Drawing.Point(655, 313);
             this.textBox_logInterval.Name = "textBox_logInterval";
             this.textBox_logInterval.Size = new System.Drawing.Size(42, 20);
             this.textBox_logInterval.TabIndex = 12;
-            this.textBox_logInterval.Text = "1";
+            this.textBox_logInterval.Text = "0.5";
             // 
             // label3
             // 
@@ -356,7 +363,7 @@ namespace RemotePS
             // timer_keithley_poll
             // 
             this.timer_keithley_poll.Enabled = true;
-            this.timer_keithley_poll.Interval = 1000;
+            this.timer_keithley_poll.Interval = 500;
             this.timer_keithley_poll.Tick += new System.EventHandler(this.timer_keithley_poll_Tick);
             // 
             // groupBox2
@@ -635,11 +642,62 @@ namespace RemotePS
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "XANTRAX";
             // 
+            // groupBox_SeqPower
+            // 
+            this.groupBox_SeqPower.Controls.Add(this.btn_SeqPower);
+            this.groupBox_SeqPower.Controls.Add(this.textBox1);
+            this.groupBox_SeqPower.Controls.Add(this.label12);
+            this.groupBox_SeqPower.Controls.Add(this.label9);
+            this.groupBox_SeqPower.Enabled = false;
+            this.groupBox_SeqPower.Location = new System.Drawing.Point(590, 339);
+            this.groupBox_SeqPower.Name = "groupBox_SeqPower";
+            this.groupBox_SeqPower.Size = new System.Drawing.Size(391, 75);
+            this.groupBox_SeqPower.TabIndex = 25;
+            this.groupBox_SeqPower.TabStop = false;
+            this.groupBox_SeqPower.Text = "Sequenced Power";
+            // 
+            // btn_SeqPower
+            // 
+            this.btn_SeqPower.Location = new System.Drawing.Point(51, 26);
+            this.btn_SeqPower.Name = "btn_SeqPower";
+            this.btn_SeqPower.Size = new System.Drawing.Size(119, 34);
+            this.btn_SeqPower.TabIndex = 2;
+            this.btn_SeqPower.Text = "ON";
+            this.btn_SeqPower.UseVisualStyleBackColor = true;
+            this.btn_SeqPower.Click += new System.EventHandler(this.btn_SeqPower_Click);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(271, 37);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(36, 20);
+            this.textBox1.TabIndex = 1;
+            this.textBox1.Text = "200";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(313, 40);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(20, 13);
+            this.label12.TabIndex = 0;
+            this.label12.Text = "ms";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(228, 40);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(37, 13);
+            this.label9.TabIndex = 0;
+            this.label9.Text = "Delay:";
+            // 
             // RemotePS
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1002, 429);
+            this.Controls.Add(this.groupBox_SeqPower);
             this.Controls.Add(this.groupBox7);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.label4);
@@ -665,6 +723,8 @@ namespace RemotePS
             this.groupBox_keithley.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);
+            this.groupBox_SeqPower.ResumeLayout(false);
+            this.groupBox_SeqPower.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -728,6 +788,11 @@ namespace RemotePS
         private System.Windows.Forms.Button btnKeithleyReset;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.GroupBox groupBox_SeqPower;
+        private System.Windows.Forms.Button btn_SeqPower;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label9;
     }
 }
 

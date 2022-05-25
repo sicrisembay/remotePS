@@ -30,15 +30,16 @@ namespace RemotePS
         {
             InitializeComponent();
 
-            this.GetSerialPorts();
-            this.GetIVIDevices();
-            this.SetConnectProperty(false);
             this.powerSupply = new xantrax(this);
             this.powerSupply.ResponseID += this.ID_RespHander;
             this.powerSupply.ResponseVoltage += this.Voltage_RespHandler;
             this.powerSupply.ResponseCurrent += this.Current_RespHandler;
 
             this.powerSupplyKeithley = new keithley(this);
+
+            this.GetSerialPorts();
+            this.GetIVIDevices();
+            this.SetConnectProperty(false);
         }
 
         #region Helpers
@@ -92,6 +93,15 @@ namespace RemotePS
                 }
             } catch (Exception ex) {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void UpdateSeqPowerEnable()
+        {
+            if((btnConnect.Text == "Disconnect") && (btnKeithleyConnect.Text == "Disconnect")) {
+                groupBox_SeqPower.Enabled = true;
+            } else {
+                groupBox_SeqPower.Enabled = false;
             }
         }
 
@@ -156,6 +166,7 @@ namespace RemotePS
                     this.powerSupply.SetOutput(false);
                     btnConnect.Text = "Disconnect";
                     this.SetConnectProperty(true);
+                    this.UpdateSeqPowerEnable();
                 } catch (Exception ex) {
                     MessageBox.Show(ex.Message);
                 }
@@ -182,6 +193,7 @@ namespace RemotePS
                     this.powerSupplyKeithley.OutputEnable(false);
                     btnKeithleyConnect.Text = "Disconnect";
                     this.SetKeithleyConnectProperty(true);
+                    this.UpdateSeqPowerEnable();
                 } catch (Exception ex) {
                     MessageBox.Show(ex.Message);
                 }
@@ -240,7 +252,7 @@ namespace RemotePS
             if(button_on_off.Text == "ON") {
                 this.powerSupply.SetOutput(true);
                 button_on_off.Text = "OFF";
-                int interval = Convert.ToInt32(textBox_logInterval.Text) * 1000;
+                int interval = Convert.ToInt32(Convert.ToSingle(textBox_logInterval.Text) * 1000);
                 if (interval < 300) {
                     interval = 300;
                 }
@@ -298,6 +310,12 @@ namespace RemotePS
                 string logString = DateTime.Now.ToString() + ", ";
                 logString += this.voltage.ToString("#.000") + ", ";
                 logString += this.current.ToString("#.000") + ", ";
+                logString += this.powerSupplyKeithley.channelData[0].voltage.ToString("#.000") + ", ";
+                logString += this.powerSupplyKeithley.channelData[0].current.ToString("#.000") + ", ";
+                logString += this.powerSupplyKeithley.channelData[1].voltage.ToString("#.000") + ", ";
+                logString += this.powerSupplyKeithley.channelData[1].current.ToString("#.000") + ", ";
+                logString += this.powerSupplyKeithley.channelData[2].voltage.ToString("#.000") + ", ";
+                logString += this.powerSupplyKeithley.channelData[2].current.ToString("#.000") + ", ";
                 logString += Environment.NewLine;
                 this.binary_writer_log.Write(Encoding.Default.GetBytes(logString));
             }
@@ -363,6 +381,11 @@ namespace RemotePS
         private void btnKeithleyReset_Click(object sender, EventArgs e)
         {
             this.powerSupplyKeithley.Reset();
+        }
+
+        private void btn_SeqPower_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
