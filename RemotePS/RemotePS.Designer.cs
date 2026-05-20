@@ -363,7 +363,7 @@ namespace RemotePS
             // timer_keithley_poll
             // 
             this.timer_keithley_poll.Enabled = true;
-            this.timer_keithley_poll.Interval = 500;
+            this.timer_keithley_poll.Interval = 50;
             this.timer_keithley_poll.Tick += new System.EventHandler(this.timer_keithley_poll_Tick);
             // 
             // groupBox2

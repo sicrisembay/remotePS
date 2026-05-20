@@ -9,11 +9,6 @@ using Ivi.Visa.Interop;
 
 namespace PowerSupply
 {
-    namespace keithley_response
-    {
-
-    }
-
     public struct ChannelInfo
     {
         public float voltage;
@@ -25,7 +20,6 @@ namespace PowerSupply
         #region members
         private const int N_CHANNEL = 3;
         private Thread pollThread;
-        private Form uiForm;
         private bool bConnected;
         private ResourceManager resource_manager;
         private FormattedIO488 instrument;
@@ -38,11 +32,11 @@ namespace PowerSupply
         {
             this.bConnected = true;
 
-            /* Set to REMOTE */
-            this.Write("SYST:REM");
+            /* Set to REMOTE and lock front panel */
+            this.instrument.WriteString("SYST:RWL\n");
 
             while (true) {
-                Thread.Sleep(500);
+                Thread.Sleep(10);
                 for (byte i = 0; i < N_CHANNEL; i++) {
                     this.channelData[i].voltage = this.GetVoltage(i);
                     this.channelData[i].current = this.GetCurrent(i);
@@ -52,7 +46,6 @@ namespace PowerSupply
 
         public keithley(Form uiForm)
         {
-            this.uiForm = uiForm;
             this.pollThread = null;
             this.bConnected = false;
             this.resource_manager = new ResourceManager();
@@ -68,7 +61,7 @@ namespace PowerSupply
 
         public void Connect(string instrumentID)
         {
-            this.instrument.IO = (IMessage)this.resource_manager.Open(instrumentID, AccessMode.NO_LOCK, this.timeout, "");
+            this.instrument.IO = (IMessage)this.resource_manager.Open(instrumentID);
             this.instrument.IO.Clear();
             this.instrument.IO.Timeout = this.timeout;
             this.instrument.IO.TerminationCharacterEnabled = true;
@@ -91,6 +84,7 @@ namespace PowerSupply
         public void Disconnect()
         {
             if(this.instrument.IO != null) {
+                this.instrument.WriteString("SYST:LOC\n");
                 this.instrument.IO.Close();
                 this.instrument.IO = null;
             }
@@ -105,7 +99,6 @@ namespace PowerSupply
         private void Write(string command)
         {
             if(this.instrument.IO != null) {
-                this.instrument.WriteString("SYST:REM\n");
                 this.instrument.WriteString(command + "\n");
             }
         }
@@ -137,7 +130,7 @@ namespace PowerSupply
         public void SetVoltage(byte channel, float voltage)
         {
             if(channel < 3) {
-                this.Write("INST:NSEL " + ( channel + 1 ).ToString());
+                this.Write("INST:SEL CH" + ( channel + 1 ).ToString());
                 this.Write("VOLT " + voltage);
             }
         }
@@ -147,7 +140,7 @@ namespace PowerSupply
             float retval = 0.0f;
             if(channel < 3) {
                 string strValue;
-                this.Write("INST:NSEL " + ( channel + 1 ).ToString() + ";:MEAS:VOLT?");
+                this.Write("INST:SEL CH" + ( channel + 1 ).ToString() + ";:MEAS:VOLT?");
                 strValue = this.Read();
                 retval = Convert.ToSingle(strValue);
             }
@@ -167,7 +160,7 @@ namespace PowerSupply
             float retval = 0.0f;
             if (channel < 3) {
                 string strValue;
-                this.Write("INST:NSEL " + ( channel + 1 ).ToString() + ";:MEAS:CURR?");
+                this.Write("INST:SEL CH" + ( channel + 1 ).ToString() + ";:MEAS:CURR?");
                 strValue = this.Read();
                 retval = Convert.ToSingle(strValue);
             }
@@ -177,9 +170,9 @@ namespace PowerSupply
         public void OutputEnable(bool enable)
         {
             if(enable) {
-                this.Write("OUTP 1");
+                this.Write("OUTP ON");
             } else {
-                this.Write("OUTP 0");
+                this.Write("OUTP OFF");
             }
         }
         #endregion
